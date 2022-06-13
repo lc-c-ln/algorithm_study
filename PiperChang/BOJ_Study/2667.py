@@ -40,4 +40,3 @@ def solution() :
     for i in sorted(alist) :
         print(i)
 solution()
-
