@@ -1,4 +1,5 @@
 function solution(fees, records) {
+    // 주차요금 계산
     function calcFee(time) {
         if (fees[0] >= time) {
             return fees[1]
