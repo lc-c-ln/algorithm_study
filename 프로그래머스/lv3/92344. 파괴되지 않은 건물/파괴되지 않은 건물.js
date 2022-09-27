@@ -19,36 +19,38 @@
 //     }   
 //     return cnt;
 // }
-
-// 부분합 알고리즘
-function solution(board, skill) {
-    let answer = 0
-    const sumMat = Array(board.length+1).fill(Array(board[0].length+1).fill(0))
-
-    // 부분합 표 완성     
-    for (s of skill) {
-        let [type, r1,c1, r2,c2, degree] = [...s]
-        if (type == 1)
-            degree *= -1
-        sumMat[r1][c1] += degree
-        sumMat[r2+1][c1] -= degree
-        sumMat[r1][c2+1] -= degree
-        sumMat[r2+1][c2+1] += degree
-        console.log(sumMat, type, r1,c1,r2,c2,degree)
-}
-
-    console.log(sumMat)
-    for (let i=0; i<board.length; i++) {
-        for (let j=0; j<board[0].length; j++) {
-            sumMat[i+1][j+1] = sumMat[i+1][j+1] + sumMat[i][j+1] +sumMat[i+1][j] -sumMat[i][j]
-        }   
+function solution(board, skills) {
+    let cnt = 0
+    const sumMat = Array.from(Array(board.length+1), ()=> Array(board[0].length+1).fill(0))
+    for (skill of skills) {
+        if(skill[0]==1) { //1이면 공격임.
+            sumMat[skill[1]][skill[2]] -= skill[5]            
+            sumMat[skill[1]][skill[4]+1] += skill[5]
+            sumMat[skill[3]+1][skill[2]] += skill[5]            
+            sumMat[skill[3]+1][skill[4]+1] -= skill[5]
+        } else {
+            sumMat[skill[1]][skill[2]] += skill[5]
+            sumMat[skill[1]][skill[4]+1] -= skill[5]
+            sumMat[skill[3]+1][skill[2]] -= skill[5]            
+            sumMat[skill[3]+1][skill[4]+1] += skill[5]
+        }
     }
+    
+    const psum = Array.from(Array(board.length+2), ()=> Array(board[0].length+2).fill(0))
+    // 이제, 위의 sumMat으로 부분합 알고리즘을 돌리면 된다.
+    for (let i=1; i<sumMat.length; i++) {
+        for (let j=1; j< sumMat[0].length; j++) {
+            psum[i][j] = psum[i-1][j] + psum[i][j-1] - psum[i-1][j-1]  + sumMat[i-1][j-1]              
+        }
+    }
+//     시작 board랑 합치기
     for (let i=0; i<board.length; i++) {
-        for (let j=0; j<board[0].length; j++) {
-            if(board[i][j] + sumMat[i+1][j+1] >0){
-                answer++;
-            }   
+        for (let j=0; j< board[0].length; j++) {
+            if (board[i][j] + psum[i+1][j+1] > 0) 
+                cnt += 1
         }
-        }
-    return answer
+    }
+    // console.log(psum)
+    return cnt
 }
+        
