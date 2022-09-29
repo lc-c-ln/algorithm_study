@@ -19,6 +19,7 @@
 //     }   
 //     return cnt;
 // }
+
 function solution(board, skills) {
     let cnt = 0
     const sumMat = Array.from(Array(board.length+1), ()=> Array(board[0].length+1).fill(0))
@@ -43,14 +44,13 @@ function solution(board, skills) {
             psum[i][j] = psum[i-1][j] + psum[i][j-1] - psum[i-1][j-1]  + sumMat[i-1][j-1]              
         }
     }
-//     시작 board랑 합치기
+    // 시작 board랑 합치기
     for (let i=0; i<board.length; i++) {
         for (let j=0; j< board[0].length; j++) {
             if (board[i][j] + psum[i+1][j+1] > 0) 
                 cnt += 1
         }
     }
-    // console.log(psum)
     return cnt
 }
         
