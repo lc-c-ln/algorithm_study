@@ -1,61 +1,36 @@
 function solution(info, edges) {
-    edgeDict = {}
+    edgeArray = Array.from(Array(info.length), () =>Array())
     for (i of edges) {
-        if (i[0] in edgeDict) 
-            edgeDict[i[0]].push(i[1])
-        else edgeDict[i[0]] = [i[1]]
+        edgeArray[i[0]].push(i[1])
     }
-    distanceToSheep = Array(info.length).fill(10000)
-    function getDistanceToNextSheep(pos) {
-        if (info[pos] === 0) 
-            return 0
-        else {
-            if (!(pos in edgeDict))
-                return 10000
-            distanceToSheep[pos] =
-                Math.min(getDistanceToNextSheep(edgeDict[pos][0]),
-                getDistanceToNextSheep(edgeDict[pos][1])) + 1
-            return distanceToSheep[pos]
-        }
-    }
-    let sheepCnt = 1
-    let wolfCnt = 0
-    let toVisit = []
+    
+    let ans = 0
+    function dfs(s,w,pos, toVisit) {
+        
+        if (info[pos])
+            w++;
+        else 
+            s++;
+        ans = Math.max(ans, s)
+        if (s <= w) 
+            return
+        
+        let currentPos = toVisit.indexOf(pos)
+        /**
+            toVisit.splice(currentPos, 1)
+            let newVisit = [...toVisit]
+            
+        */
+        // 위와 아래의 두 줄의 차이가 뭐지..?
+        let newVisit = [...toVisit]
+        newVisit.splice(currentPos, 1)
+        // 
+        newVisit.push(...edgeArray[pos])
 
-    function visit(pos) {
-        if (pos in edgeDict) {
-            for (nextNode of edgeDict[pos]) {
-                    // 현재 pos에 연결된 노드들 전부 확인
-                    if (info[nextNode] === 0) {
-                        sheepCnt ++;
-                        visit(nextNode)
-                    } else {
-                        getDistanceToNextSheep(nextNode)
-                        toVisit.push(nextNode)
-                    }
-            }
+        for (let next of newVisit) {
+            dfs(s, w, next, newVisit)
         }
     }
-    visit(0)
-    while (toVisit) {
-        min = 10000
-        next = -1
-        for (i of toVisit) {
-            if (distanceToSheep[i] < min){
-                min = distanceToSheep[i]
-                next = i
-            }
-        }
-        if (next === -1) {
-            return sheepCnt
-        }
-        console.log("방문 할 곳",next, "wolf", wolfCnt, "다음", distanceToSheep[next], sheepCnt)
-        toVisit = toVisit.filter((e)=> e !== next )
-        if (wolfCnt + distanceToSheep[next] < sheepCnt) {
-            wolfCnt ++;
-            visit(next)
-        } else {
-            return sheepCnt
-        }
-    }    
+    dfs(0, 0, 0,[0])
+    return ans
 }
