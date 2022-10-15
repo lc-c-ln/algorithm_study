@@ -7,7 +7,7 @@ function solution(n, paths, gates, summits) {
         graph[b].push([w,a]);
     }
     
-    // 산봉우리에서 나가는 간선 제거
+    // 산봉우리에서 나가는 간선 제거 ? 
     for(let summit of summits){
         graph[summit] = [];
     }
