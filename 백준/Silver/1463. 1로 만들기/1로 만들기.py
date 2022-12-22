@@ -1,10 +1,12 @@
-x = int(input())
-memo = [x for i in range(x+1)]
-memo[x] = 0
-for n in reversed(range(1, x+1)):
-    if n % 3 == 0:
-        memo[int(n / 3)] = min(memo[n] + 1, memo[int(n / 3)])
-    if n % 2 == 0:
-        memo[int(n / 2)] = min(memo[n] + 1, memo[int(n / 2)])
-    memo[n-1] = min(memo[n-1], memo[n] + 1)
-print(memo[1])
+# x에 사용할 수 있는 연산은 3가지
+n = int(input())
+a = [0 for _ in range(n+1)]
+
+for i in reversed(range(1, n)) :
+  m = a[i+1]
+  if i * 3 <= n:
+    m = min(a[i*3], m)
+  if i * 2 <= n :
+    m = min(a[i*2], m)
+  a[i] = m + 1
+print(a[1])
