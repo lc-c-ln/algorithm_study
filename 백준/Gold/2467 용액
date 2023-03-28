@@ -1,0 +1,31 @@
+n = int(input())
+list = list(map(int, input().split()))
+list.sort()
+
+minusStart = 0
+plusStart = n-1
+
+# if 모두 양수/ 모두 음수 -> 첫째, 둘째 합
+if list[n-1] < 0 :
+    print(list[n-2], list[n-1]) 
+elif list[0] > 0 :
+    print(list[0], list[1])
+else :
+    answer = [0, 1]
+    minAbs = abs(list[0] + list[1])
+    while (minusStart < plusStart) :
+        sum = list[minusStart] + list[plusStart]
+        if abs(sum) < abs(minAbs) :
+            minAbs = abs(sum)
+            answer[0] = list[minusStart]
+            answer[1] = list[plusStart]
+        if sum < 0 :
+            minusStart += 1
+        else :
+            plusStart -= 1
+    print(answer[0], answer[1])
+        
+        
+    
+
+# 양수, 음수 나눌거임
